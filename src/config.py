@@ -1,0 +1,1 @@
+MUSIC_VOLUME = 0.06

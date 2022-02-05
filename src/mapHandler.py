@@ -3,7 +3,7 @@ from tkinter import dialog
 import pygame
 from pygame.locals import *
 import random
-from camera import *
+from src.camera import *
 import sys
 
 class mapHandler:
@@ -249,9 +249,9 @@ class mapHandler:
     def loadTextures(self):
         
         #load each textures
-        wall_texture  = pygame.image.load('Assets/wall.png').convert_alpha() 
-        grass_texture = pygame.image.load('Assets/grass.png').convert_alpha()
-        snow_texture = pygame.image.load('Assets/snow.png').convert_alpha()
+        wall_texture  = pygame.image.load('Assets/Textures/wall.png').convert_alpha() 
+        grass_texture = pygame.image.load('Assets/Textures/grass.png').convert_alpha()
+        snow_texture = pygame.image.load('Assets/Textures/snow.png').convert_alpha()
         
         #add each textures to the textures list
         self.textures.append(grass_texture)

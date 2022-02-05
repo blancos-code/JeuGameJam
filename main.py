@@ -1,7 +1,9 @@
 import pygame
 from pygame.locals import *
-from mapHandler import *
-from camera import *
+from src.mapHandler import mapHandler
+from src.camera import Camera
+from src.config import *
+from src.music import Music
 import sys
 
 
@@ -14,7 +16,7 @@ class Game:
         #pygame init
         pygame.init()
         pygame.display.set_caption('Le jeu bg')
-        self.WINDOW   = pygame.display.set_mode((1920, 1080), DOUBLEBUF)    #set the display mode, window title and FPS clock
+        self.WINDOW   = pygame.display.set_mode((0, 0), FULLSCREEN)    #set the display mode, window title and FPS clock
         self.FPSCLOCK = pygame.time.Clock()
         
         #camera init
@@ -32,12 +34,9 @@ class Game:
         
         
         #music init & start
-        music = 'terraria.mp3'
-        pygame.init()
-        pygame.mixer.init()
-        pygame.mixer.music.load(music)
-        pygame.mixer.music.play(-1)     # If the loops is -1 then the music will repeat indefinitely.
-        pygame.mixer.music.set_volume(0.06)
+        self.music = Music()
+        self.music.startMusic(self.music.musics['grass'], MUSIC_VOLUME)
+        
       
     def main(self):
         while self.isRunning():
