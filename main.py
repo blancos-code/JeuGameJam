@@ -14,7 +14,7 @@ class Game:
         #pygame init
         pygame.init()
         pygame.display.set_caption('Le jeu bg')
-        self.WINDOW   = pygame.display.set_mode((960, 1080), DOUBLEBUF)    #set the display mode, window title and FPS clock
+        self.WINDOW   = pygame.display.set_mode((1920, 1080), DOUBLEBUF)    #set the display mode, window title and FPS clock
         self.FPSCLOCK = pygame.time.Clock()
         
         #camera init
@@ -58,7 +58,7 @@ class Game:
                         sys.exit()
 
             #clock
-            self.FPSCLOCK.tick(120)
+            self.FPSCLOCK.tick(60)
         
     def update(self):
         self.movement()
@@ -76,13 +76,13 @@ class Game:
     def movement(self):
         keys = pygame.key.get_pressed()
         if keys[pygame.K_s]:
-            self.camera.setPosition(self.camera.getXPosition(), self.camera.getYPosition() + 5)
+            self.camera.setPosition(self.camera.getXPosition(), self.camera.getYPosition() + 20)
         if keys[pygame.K_z]:
-            self.camera.setPosition(self.camera.getXPosition(), self.camera.getYPosition() - 5)
+            self.camera.setPosition(self.camera.getXPosition(), self.camera.getYPosition() - 20)
         if keys[pygame.K_q]:
-            self.camera.setPosition(self.camera.getXPosition() - 5, self.camera.getYPosition())
+            self.camera.setPosition(self.camera.getXPosition() - 20, self.camera.getYPosition())
         if keys[pygame.K_d]:
-            self.camera.setPosition(self.camera.getXPosition() + 5, self.camera.getYPosition())
+            self.camera.setPosition(self.camera.getXPosition() + 20, self.camera.getYPosition())
 
     def isRunning(self):
         return self.runningState

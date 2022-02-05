@@ -1,3 +1,4 @@
+from importlib.resources import path
 from tkinter import dialog
 import pygame
 from pygame.locals import *
@@ -11,10 +12,10 @@ class mapHandler:
     def __init__(self):
 
         #caracteristics
-        self.MAP_LENGTH = 30
-        self.MAP_WIDTH = 30
+        self.MAP_LENGTH = 150
+        self.MAP_WIDTH = 150
         self.EXT_WALLS_SIZE = 1
-        self.PATH_SIZE = int(((self.MAP_LENGTH * self.MAP_WIDTH)))
+        self.PATH_SIZE = int(((self.MAP_LENGTH * self.MAP_WIDTH))) #default
 
         #map data values /!\AND/!\ textures[] index
         self.SNOW = 2
@@ -35,9 +36,7 @@ class mapHandler:
 
         #here will be stored the loaded images
         self.textures = []
-        
-        self.map_areas_init()
-        
+            
 
     def map_areas_init(self):
         
@@ -68,49 +67,59 @@ class mapHandler:
                 
             self.map_data.append(row)
             
-        self.pathMaking(self.GRASS, self.PATH_SIZE) 
+        self.mainAreaCreation() 
         self.biomeCreation()
         self.printMap()
+
     
 
-
-
-    def biomeCreation(self):
-
-        #snowbiome
-        snow_x = random.randint(1, self.MAP_LENGTH)
-        snow_y = random.randint(1, self.MAP_WIDTH)
-
-        self.pathMaking(self.SNOW, 15)
     
     #pathMaking algorithm
     #creates the navigable area on the map
-    def pathMaking(self, TEXTURE, PATH_SIZE):
+    def mainAreaCreation(self):
         row = int(self.MAP_WIDTH/2)
         col = int(self.MAP_LENGTH/2)
         
-        self.map_data[int(row/2)][int(col/2)] = TEXTURE
+        self.map_data[int(row/2)][int(col/2)] = self.GRASS
+        self.path(row, col, self.GRASS, self.PATH_SIZE)
         
-        self.path(row, col)
+        
+    def biomeCreation(self):
+
+        #snowbiome
+        for i in range(3):
+            biome_x, biome_y = self.biomeStartPointSelector([self.GRASS, self.WALL])
+            self.path(biome_x, biome_y, self.SNOW, 400)
+        
+    
+    def biomeStartPointSelector(self, textureList):
+        
+        while True:
+            
+            biome_x = random.randint(1, self.MAP_LENGTH-2)
+            biome_y = random.randint(1, self.MAP_WIDTH-2)
+            
+            for index, texture in enumerate(textureList):
+                if self.map_data[biome_x][biome_y] == texture:
+                    return biome_y, biome_y;
         
         
-    def path(self, row, col):
         
-        path_size = self.PATH_SIZE
+        
+    def path(self, row, col, TEXTURE, PATH_SIZE):
+        
+        path_size = PATH_SIZE
 
         for PATH_iterator in range(path_size):
             if (PATH_iterator%10 == 0):
                 for i in range(12):
-                    row, col = self.step(row, col)
-            row, col = self.step(row, col)
+                    row, col = self.step(row, col, TEXTURE)
+            row, col = self.step(row, col, TEXTURE)
 
-
-
-
-            
+    
 
     #moves the position of the path algorithm in a coherent direction
-    def step(self, row, col):
+    def step(self, row, col, TEXTURE):
         
         UP = 1
         DOWN = 2
@@ -144,7 +153,7 @@ class mapHandler:
                 else:
                     col -= 1
 
-        self.map_data[row][col] = self.GRASS
+        self.map_data[row][col] = TEXTURE
         
         return row, col;
         
@@ -188,20 +197,20 @@ class mapHandler:
 
 
         #data boundaries corresponding to camera position
-        row_min = cam_y - 20
+        row_min = cam_y - 32
         if row_min < 0:
             row_min = 0
 
-        col_min =  cam_x - 20
+        col_min =  cam_x - 32
         if col_min < 0:
             col_min = 0
 
 
-        row_max = cam_y + 20
+        row_max = cam_y + 32
         if row_max > self.MAP_WIDTH:
             row_max = self.MAP_WIDTH
 
-        col_max = cam_x + 20
+        col_max = cam_x + 32
         if col_max > self.MAP_LENGTH:
             col_max = self.MAP_LENGTH
         
@@ -224,6 +233,8 @@ class mapHandler:
                     tileImage = self.textures[self.WALL]
                 elif tile == self.GRASS:
                     tileImage = self.textures[self.GRASS]
+                elif tile == self.SNOW:
+                    tileImage = self.textures[self.SNOW]
                             
                 #pos = center of the texture
                 centered_x = WINDOW.get_rect().centerx + iso_x
